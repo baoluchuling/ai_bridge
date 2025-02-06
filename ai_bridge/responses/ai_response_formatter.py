@@ -1,24 +1,5 @@
 from typing import Any, Optional
 
-class ResponseModel:
-    def __init__(self, status_code: int, vendor: str, message: str, response: Optional[str] = None):
-        self.status_code = status_code
-        self.vendor = vendor
-        self.message = message
-        self.response = response
-
-    def to_dict(self):
-        """ 转换为字典 """
-        return {
-            "status_code": self.status_code,
-            "vendor": self.vendor,
-            "message": self.message,
-            "response": self.response,
-        }
-
-    def __repr__(self):
-        return f"AIResponse(status_code={self.status_code}, vendor={self.vendor}, message={self.message}, response={self.response})"
-
 class AIResponse:
     def __init__(self, text: str, tokens_used: int, model: str, reasoning_content: str, raw_response: Any):
         self.text = text
@@ -39,6 +20,25 @@ class AIResponse:
 
     def __repr__(self):
         return f"AIResponse(text={self.text}, tokens_used={self.tokens_used}, model={self.model}, reasoning_content={self.reasoning_content}, raw_response={self.raw_response})"
+
+class ResponseModel:
+    def __init__(self, status_code: int, vendor: str, message: str, response: Optional[AIResponse] = None):
+        self.status_code = status_code
+        self.vendor = vendor
+        self.message = message
+        self.response = response
+
+    def to_dict(self):
+        """ 转换为字典 """
+        return {
+            "status_code": self.status_code,
+            "vendor": self.vendor,
+            "message": self.message,
+            "response": self.response,
+        }
+
+    def __repr__(self):
+        return f"ResponseModel(status_code={self.status_code}, vendor={self.vendor}, message={self.message}, response={self.response})"
 
 class AIResponseFormatter:
     @staticmethod
