@@ -27,32 +27,29 @@ class AIResponseFormatter:
 
             # 解析不同 AI 提供商的响应
             if provider == "openai":
-                return AIResponseFormatter._format_openai(response)
+                return AIResponseFormatter._format_openai(provider, response)
             elif provider == "deepseek":
-                return AIResponseFormatter._format_deepseek(response)
+                return AIResponseFormatter._format_deepseek(provider, response)
             elif provider == "google":
-                return AIResponseFormatter._format_google(response)
+                return AIResponseFormatter._format_google(provider, response)
             else:
                 return AIResponseFormatter._error_response(provider, "Unsupported provider")
         except Exception as e:
             return AIResponseFormatter._error_response(provider, f"Error formatting response: {str(e)}")
 
     @staticmethod
-    def _error_response(provider, message):
+    def _error_response(provider, message, code):
         """
         统一错误格式
         """
         return {
-            "error": True,
+            "status_code": code,
             "provider": provider,
             "message": message,
-            "text": "",
-            "reasoning": "",
-            "tokens_used": 0
         }
     
     @staticmethod
-    def _format_google(response: dict) -> dict:
+    def _format_google(provider, response: dict) -> dict:
         """格式化 Google Gemini AI 响应"""
         try:
             text = response["candidates"][0]["content"]["parts"][0]["text"]
@@ -63,15 +60,19 @@ class AIResponseFormatter:
             raise ValueError("Invalid Google response format")
 
         return {
-            "text": text.strip(),
-            "tokens_used": tokens_used,
-            "model": model,
-            "reasoning_content": reasoning_content,
-            "raw_response": response
+            "status_code": 200, 
+            "provider": provider,
+            "response": {
+                "text": text.strip(),
+                "tokens_used": tokens_used,
+                "model": model,
+                "reasoning_content": reasoning_content.strip(),
+                "raw_response": response
+            }
         }
 
     @staticmethod
-    def _format_openai(response: dict) -> dict:
+    def _format_openai(provider, response: dict) -> dict:
         """格式化 OpenAI API 响应"""
         try:
             text = response["choices"][0]["message"]["content"]
@@ -82,15 +83,19 @@ class AIResponseFormatter:
             raise ValueError("Invalid OpenAI response format")
 
         return {
-            "text": text.strip(),
-            "tokens_used": tokens_used,
-            "model": model,
-            "reasoning_content": reasoning_content.strip(),
-            "raw_response": response
+            "status_code": 200,
+            "provider": provider, 
+            "response": {
+                "text": text.strip(),
+                "tokens_used": tokens_used,
+                "model": model,
+                "reasoning_content": reasoning_content.strip(),
+                "raw_response": response
+            }
         }
 
     @staticmethod
-    def _format_deepseek(response: dict) -> dict:
+    def _format_deepseek(provider, response: dict) -> dict:
         """格式化 DeepSeek AI 响应"""
         try:
             text = response["choices"][0]["message"]["content"]
@@ -101,9 +106,13 @@ class AIResponseFormatter:
             raise ValueError("Invalid DeepSeek response format")
 
         return {
-            "text": text.strip(),
-            "tokens_used": tokens_used,
-            "model": model,
-            "reasoning_content": reasoning_content.strip(),
-            "raw_response": response
+            "status_code": 200,
+            "provider": provider,
+            "response": {
+                "text": text.strip(),
+                "tokens_used": tokens_used,
+                "model": model,
+                "reasoning_content": reasoning_content.strip(),
+                "raw_response": response
+            }
         }
