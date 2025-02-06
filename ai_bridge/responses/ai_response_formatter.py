@@ -33,9 +33,9 @@ class AIResponseFormatter:
             elif provider == "google":
                 return AIResponseFormatter._format_google(provider, response)
             else:
-                return AIResponseFormatter._error_response(provider, "Unsupported provider")
+                return AIResponseFormatter._error_response(provider, "Unsupported provider", 500)
         except Exception as e:
-            return AIResponseFormatter._error_response(provider, f"Error formatting response: {str(e)}")
+            return AIResponseFormatter._error_response(provider, f"Error formatting response: {str(e)}", 500)
 
     @staticmethod
     def _error_response(provider, message, code):
