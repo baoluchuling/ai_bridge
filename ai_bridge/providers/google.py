@@ -2,9 +2,9 @@ import requests
 import json
 
 class GoogleProvider:
-    def __init__(self, api_key=None):
+    def __init__(self, api_key=None, base_url=None):
         self.api_key = api_key or ""
-        self.base_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+        self.base_url = base_url or ""
 
     async def ask(self, prompt, **kwargs):
         headers = {
@@ -31,4 +31,4 @@ class GoogleProvider:
         print(f"Response Body: {response.text.strip()}")
         print("-----------------------------")
 
-        return response.text.strip()
+        return response.json

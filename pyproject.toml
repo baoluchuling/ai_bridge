@@ -7,7 +7,6 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-openai = "^1.61"
 requests = "^2.31"
 
 [tool.poetry.group.dev.dependencies]

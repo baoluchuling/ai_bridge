@@ -1,6 +1,7 @@
 import json
 import os
 from ai_bridge.providers import OpenAIProvider, DeepSeekProvider, GoogleProvider
+from ai_bridge.responses.ai_response_formatter import AIResponseFormatter
 
 class AIBridge:
     def __init__(self):
@@ -25,10 +26,11 @@ class AIBridge:
 
         for provider_name, provider_config in config.items():
             api_key = provider_config.get("api_key")
-            if api_key:
-                self.register_provider(provider_name, api_key)
+            base_url = provider_config.get("base_url")
+            if api_key and base_url:
+                self.register_provider(provider_name, api_key, base_url)
 
-    def register_provider(self, provider_name: str, api_key: str):
+    def register_provider(self, provider_name: str, api_key: str, base_url: str):
         """
         动态注册提供商及其 API 密钥
         """
@@ -39,11 +41,12 @@ class AIBridge:
         }
 
         if provider_name in provider_classes:
-            self.providers[provider_name] = provider_classes[provider_name](api_key)
+            self.providers[provider_name] = provider_classes[provider_name](api_key, base_url)
         else:
             raise ValueError(f"Unsupported provider: {provider_name}")
 
     async def ask(self, provider: str, prompt: str, **kwargs):
         if provider not in self.providers:
             raise ValueError(f"Provider {provider} not registered.")
-        return await self.providers[provider].ask(prompt, **kwargs)
+        response = await self.providers[provider].ask(prompt, **kwargs)
+        return AIResponseFormatter.format(response, provider)

@@ -1,10 +1,12 @@
 import requests
 import json
 
+from ai_bridge.responses.ai_response_formatter import AIResponseFormatter
+
 class DeepSeekProvider:
-    def __init__(self, api_key=None):
-        self.api_key = api_key
-        self.base_url = "https://api.siliconflow.cn/v1/chat/completions"
+    def __init__(self, api_key=None, base_url=None):
+        self.api_key = api_key or ""
+        self.base_url = base_url or ""
 
     async def ask(self, prompt, **kwargs):
 
@@ -47,4 +49,4 @@ class DeepSeekProvider:
         print(f"Response Body: {response.text.strip()}")
         print("-----------------------------")
 
-        return response.text.strip()
+        return response.json
