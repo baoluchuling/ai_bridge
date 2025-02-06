@@ -3,7 +3,7 @@ import json
 
 class DeepSeekProvider:
     def __init__(self, api_key=None):
-        self.api_key = api_key or "your-google-key"
+        self.api_key = api_key
         self.base_url = "https://api.siliconflow.cn/v1/chat/completions"
 
     async def ask(self, prompt, **kwargs):
@@ -27,7 +27,7 @@ class DeepSeekProvider:
             "response_format": {"type": "text"},
         }
         headers = {
-            "Authorization": f"Bearer <{self.api_key}>",
+            "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
         }
         url = self.base_url
