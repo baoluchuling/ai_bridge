@@ -49,4 +49,4 @@ class AIBridge:
         if provider not in self.providers:
             raise ValueError(f"Provider {provider} not registered.")
         response = await self.providers[provider].ask(prompt, **kwargs)
-        return AIResponseFormatter.format(response, provider)
+        return AIResponseFormatter.format(provider, response)

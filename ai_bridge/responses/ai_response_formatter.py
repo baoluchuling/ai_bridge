@@ -4,23 +4,53 @@ class AIResponseFormatter:
     """统一 AI API 响应数据格式"""
 
     @staticmethod
-    def format(response: dict, provider: str) -> dict:
+    def format(provider, response):
         """
-        解析不同 AI API 返回的 JSON，转换为标准格式。
-
-        :param response: AI API 的原始 JSON 响应
-        :param provider: AI 提供商名称 (如 "openai", "deepseek", "google")
-        :return: 统一格式的字典
+        统一解析不同 AI API 的返回结果，支持错误处理。
+        
+        :param response: API 响应（dict 或 None）
+        :param provider: AI 提供商名称（str）
+        :return: 统一格式的 dict
         """
-        if provider == "google":
-            return AIResponseFormatter._format_google(response)
-        elif provider == "openai":
-            return AIResponseFormatter._format_openai(response)
-        elif provider == "deepseek":
-            return AIResponseFormatter._format_deepseek(response)
-        else:
-            raise ValueError(f"Unsupported provider: {provider}")
+        try:
+            # 处理 API 请求失败（response 可能是 None 或非 dict）
+            if not response or not isinstance(response, dict):
+                return AIResponseFormatter._error_response(provider, "Invalid or empty response")
 
+            # 处理 HTTP 错误情况
+            if "error" in response:
+                return AIResponseFormatter._error_response(
+                    provider,
+                    response.get("error", {}).get("message", "Unknown API error"),
+                    code=response.get("error", {}).get("code", "unknown")
+                )
+
+            # 解析不同 AI 提供商的响应
+            if provider == "openai":
+                return AIResponseFormatter._format_openai(response)
+            elif provider == "deepseek":
+                return AIResponseFormatter._format_deepseek(response)
+            elif provider == "google":
+                return AIResponseFormatter._format_google(response)
+            else:
+                return AIResponseFormatter._error_response(provider, "Unsupported provider")
+        except Exception as e:
+            return AIResponseFormatter._error_response(provider, f"Error formatting response: {str(e)}")
+
+    @staticmethod
+    def _error_response(provider, message):
+        """
+        统一错误格式
+        """
+        return {
+            "error": True,
+            "provider": provider,
+            "message": message,
+            "text": "",
+            "reasoning": "",
+            "tokens_used": 0
+        }
+    
     @staticmethod
     def _format_google(response: dict) -> dict:
         """格式化 Google Gemini AI 响应"""
