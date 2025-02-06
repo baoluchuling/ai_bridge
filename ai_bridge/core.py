@@ -9,10 +9,7 @@ class AIBridge:
         self.load_providers()
 
     def load_providers(self):
-        """
-        从环境变量 `AI_BRIDGE_PROVIDERS` 加载提供商及其 API 密钥。
-        格式: {"openai": {"api_key": "sk-xxx"}, "deepseek": {"api_key": "sk-yyy"}}
-        """
+
         providers_config = os.getenv("AI_BRIDGE_PROVIDERS")
 
         if not providers_config:
@@ -31,9 +28,6 @@ class AIBridge:
                 self.register_provider(provider_name, api_key, base_url)
 
     def register_provider(self, provider_name: str, api_key: str, base_url: str):
-        """
-        动态注册提供商及其 API 密钥
-        """
         provider_classes = {
             "openai": OpenAIProvider,
             "deepseek": DeepSeekProvider,
