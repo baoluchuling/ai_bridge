@@ -6,7 +6,11 @@ class OpenAIProvider:
         self.api_key = api_key or ""
         self.base_url = base_url or ""
 
-    async def ask(self, model, prompt):
+    async def ask_single(self, model, prompt: str):
+        """支持单条 prompt 调用"""
+        return await self.ask(model, [{"role": "user", "content": prompt}])
+    
+    async def ask(self, model, messages: list[dict]):
         if model is None:
             model = "gpt-4o"
         headers = {
@@ -16,9 +20,7 @@ class OpenAIProvider:
         payload = {
             "model": model,
             "store": True,
-            "messages": [
-                {"role": "user", "content": prompt}
-            ]
+            "messages": messages
         }
 
         url = f"{self.base_url}"

@@ -6,7 +6,11 @@ class GoogleProvider:
         self.api_key = api_key or ""
         self.base_url = base_url or ""
 
-    async def ask(self, model, prompt):
+    async def ask_single(self, model, prompt: str):
+        """支持单条 prompt 调用"""
+        return await self.ask(model, [{"role": "user", "parts": [{"text": prompt}]}])
+    
+    async def ask(self, model, messages: list[dict]):
 
         if model is None:
             model = "gemini-1.5-flash"
@@ -14,7 +18,7 @@ class GoogleProvider:
         headers = {
             "Content-Type": "application/json"
         }
-        payload = {"contents": [{"parts": [{"text": prompt}]}]}
+        payload = {"contents": self.convert_to_google(messages)}
 
         url = f"{self.base_url}/{model}:generateContent?key={self.api_key}"
 
@@ -45,3 +49,16 @@ class GoogleProvider:
             }
 
         return response.json()
+    
+    def convert_to_google(self, messages: list[dict]) -> list[dict]:
+        """将 OpenAI 的消息格式转换为 Google API 格式"""
+        converted = []
+        for msg in messages:
+            if "content" in msg:
+                converted.append({
+                    "role": msg["role"],
+                    "parts": [{"text": msg["content"]}]
+                })
+            else:
+                raise ValueError(f"Message missing 'content' field: {msg}")
+        return converted
