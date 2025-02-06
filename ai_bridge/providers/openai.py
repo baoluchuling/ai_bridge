@@ -29,7 +29,7 @@ class OpenAIProvider:
         print("-----------------------------")
         
         # 发送请求
-        response = requests.request("POST", url, json=payload, headers=headers)
+        response = requests.request("POST", url, json=payload, headers=headers, verify=False)
         
         # 打印响应信息
         print("---- Response Information ----")
