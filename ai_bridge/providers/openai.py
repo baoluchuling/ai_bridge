@@ -6,13 +6,15 @@ class OpenAIProvider:
         self.api_key = api_key or ""
         self.base_url = base_url or ""
 
-    async def ask(self, prompt, **kwargs):
+    async def ask(self, model, prompt):
+        if model is None:
+            model = "gpt-4o"
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
         }
         payload = {
-            "model": "gpt-4o",
+            "model": model,
             "store": True,
             "messages": [
                 {"role": "user", "content": prompt}

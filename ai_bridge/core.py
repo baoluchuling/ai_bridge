@@ -45,8 +45,8 @@ class AIBridge:
         else:
             raise ValueError(f"Unsupported provider: {provider_name}")
 
-    async def ask(self, provider: str, prompt: str, **kwargs):
+    async def ask(self, provider: str, model: str, prompt: str):
         if provider not in self.providers:
             raise ValueError(f"Provider {provider} not registered.")
-        response = await self.providers[provider].ask(prompt, **kwargs)
+        response = await self.providers[provider].ask(model, prompt)
         return AIResponseFormatter.format(provider, response)

@@ -6,14 +6,18 @@ class GoogleProvider:
         self.api_key = api_key or ""
         self.base_url = base_url or ""
 
-    async def ask(self, prompt, **kwargs):
+    async def ask(self, model, prompt):
+
+        if model is None:
+            model = "gemini-1.5-flash"
+
         headers = {
             # "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
         }
         payload = {"contents": [{"parts": [{"text": prompt}]}]}
 
-        url = f"{self.base_url}?key={self.api_key}"
+        url = f"{self.base_url}/{model}:generateContent?key={self.api_key}"
 
         # 打印请求信息
         print("---- Request Information ----")

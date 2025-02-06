@@ -8,10 +8,11 @@ class DeepSeekProvider:
         self.api_key = api_key or ""
         self.base_url = base_url or ""
 
-    async def ask(self, prompt, **kwargs):
-
+    async def ask(self, model, prompt):
+        if model is None:
+            model = "deepseek-ai/DeepSeek-R1"
         payload = {
-            "model": "deepseek-ai/DeepSeek-R1",
+            "model": model,
             "messages": [
                 {
                     "role": "user",
