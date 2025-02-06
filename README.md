@@ -1,5 +1,7 @@
 
-使用
+ai generate
+
+usage
 
 ```python
 from ai_bridge import AIBridge
