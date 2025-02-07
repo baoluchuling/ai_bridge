@@ -22,7 +22,7 @@ class AIResponse:
         return f"AIResponse(text={self.text}, tokens_used={self.tokens_used}, model={self.model}, reasoning_content={self.reasoning_content}, raw_response={self.raw_response})"
 
 class ResponseModel:
-    def __init__(self, status_code: int, vendor: str, message: str, response: Optional[AIResponse] = None):
+    def __init__(self, status_code: int, vendor: str, message: Optional[str] = None, response: Optional[AIResponse] = None):
         self.status_code = status_code
         self.vendor = vendor
         self.message = message
@@ -68,9 +68,9 @@ class AIResponseFormatter:
     @staticmethod
     def _error_response(vendor, message, code):
         return ResponseModel(
-            code,
-            vendor,
-            message
+            status_code=code,
+            vendor=vendor,
+            message=message
         )
     
     @staticmethod
@@ -84,9 +84,9 @@ class AIResponseFormatter:
             raise ValueError("Invalid Google response format")
         
         return ResponseModel(
-            200,
-            vendor,
-            AIResponse(
+            status_code=200,
+            vendor=vendor,
+            response= AIResponse(
                 text.strip(),
                 tokens_used,
                 model,
@@ -106,9 +106,9 @@ class AIResponseFormatter:
             raise ValueError("Invalid OpenAI response format")
 
         return ResponseModel(
-            200,
-            vendor,
-            AIResponse(
+            status_code=200,
+            vendor=vendor,
+            response= AIResponse(
                 text.strip(),
                 tokens_used,
                 model,
@@ -128,9 +128,9 @@ class AIResponseFormatter:
             raise ValueError("Invalid DeepSeek response format")
 
         return ResponseModel(
-            200,
-            vendor,
-            AIResponse(
+            status_code=200,
+            vendor=vendor,
+            response= AIResponse(
                 text.strip(),
                 tokens_used,
                 model,
