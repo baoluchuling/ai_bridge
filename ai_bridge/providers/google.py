@@ -56,7 +56,7 @@ class GoogleProvider:
         for msg in messages:
             if "content" in msg:
                 converted.append({
-                    "role": msg["role"],
+                    "role": "model" if msg["role"] == "system" else msg["role"],
                     "parts": [{"text": msg["content"]}]
                 })
             else:
