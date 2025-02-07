@@ -2,6 +2,9 @@ import json
 import os
 from ai_bridge.providers import OpenAIProvider, DeepSeekProvider, GoogleProvider
 from ai_bridge.responses.ai_response_formatter import AIResponseFormatter
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class AIBridge:
     def __init__(self):

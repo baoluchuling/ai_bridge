@@ -25,18 +25,18 @@ class OpenAIProvider:
 
         url = f"{self.base_url}"
 
-        print("---- Request Information ----")
-        print(f"URL: {url}")
-        print(f"Headers: {json.dumps(headers, indent=4)}")
-        print(f"Payload: {json.dumps(payload, indent=4)}")
-        print("-----------------------------")
+        # print("---- Request Information ----")
+        # print(f"URL: {url}")
+        # print(f"Headers: {json.dumps(headers, indent=4)}")
+        # print(f"Payload: {json.dumps(payload, indent=4)}")
+        # print("-----------------------------")
         
         response = requests.request("POST", url, json=payload, headers=headers, verify=False)
         
-        print("---- Response Information ----")
-        print(f"Status Code: {response.status_code}")
-        print(f"Response Body: {response.text.strip()}")
-        print("-----------------------------")
+        # print("---- Response Information ----")
+        # print(f"Status Code: {response.status_code}")
+        # print(f"Response Body: {response.text.strip()}")
+        # print("-----------------------------")
 
         if response.status_code < 200 or response.status_code >= 300:
             try:

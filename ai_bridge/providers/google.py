@@ -1,5 +1,6 @@
 import requests
 import json
+import logging
 
 class GoogleProvider:
     def __init__(self, api_key=None, base_url=None):
@@ -22,18 +23,18 @@ class GoogleProvider:
 
         url = f"{self.base_url}/{model}:generateContent?key={self.api_key}"
 
-        print("---- Request Information ----")
-        print(f"URL: {url}")
-        print(f"Headers: {json.dumps(headers, indent=4)}")
-        print(f"Payload: {json.dumps(payload, indent=4)}")
-        print("-----------------------------")
-        
+        # logging.info("---- Request Information ----")
+        # logging.info(f"URL: {url}")
+        # logging.info(f"Headers: {json.dumps(headers, indent=4)}")
+        # logging.info(f"Payload: {json.dumps(payload, indent=4)}")
+        # logging.info("-----------------------------")
+
         response = requests.request("POST", url, json=payload, headers=headers)
         
-        print("---- Response Information ----")
-        print(f"Status Code: {response.status_code}")
-        print(f"Response Body: {response.text.strip()}")
-        print("-----------------------------")
+        # logging.info("---- Response Information ----")
+        # logging.info(f"Status Code: {response.status_code}")
+        # logging.info(f"Response Body: {response.text.strip()}")
+        # logging.info("-----------------------------")
 
         if response.status_code < 200 or response.status_code >= 300:
             try:
