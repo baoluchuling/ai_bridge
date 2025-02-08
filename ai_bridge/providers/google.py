@@ -19,7 +19,10 @@ class GoogleProvider:
         headers = {
             "Content-Type": "application/json"
         }
-        payload = {"contents": self.convert_to_google(messages)}
+        payload = {
+            "contents": self.convert_to_google(messages),
+            "generationConfig": { "response_mime_type": "application/json" }
+        }
 
         url = f"{self.base_url}/{model}:generateContent?key={self.api_key}"
 
