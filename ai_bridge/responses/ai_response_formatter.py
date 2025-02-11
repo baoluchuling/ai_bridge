@@ -81,7 +81,7 @@ class AIResponseFormatter:
             model = response.get("modelVersion", "unknown")
             reasoning_content = ""
         except (KeyError, IndexError):
-            raise ValueError("Invalid Google response format")
+            raise ValueError(f"Invalid Google response format, {response}")
         
         return ResponseModel(
             status_code=200,
