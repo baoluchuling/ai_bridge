@@ -11,7 +11,7 @@ class GoogleProvider:
         """支持单条 prompt 调用"""
         return await self.ask(model, [{"role": "user", "parts": [{"text": prompt}]}])
     
-    async def ask(self, model, messages: list[dict]):
+    async def ask(self, model, messages: list[dict], format: str = "text"):
 
         if model is None:
             model = "gemini-1.5-flash"
@@ -19,10 +19,16 @@ class GoogleProvider:
         headers = {
             "Content-Type": "application/json"
         }
-        payload = {
-            "contents": self.convert_to_google(messages),
-            "generationConfig": { "response_mime_type": "application/json" }
-        }
+        
+        if format == "json":
+            payload = {
+                "contents": self.convert_to_google(messages),
+                "generationConfig": {"response_mime_type": "application/json"}
+            }
+        else:
+            payload = {
+                "contents": self.convert_to_google(messages),
+            }
 
         url = f"{self.base_url}/{model}:generateContent?key={self.api_key}"
 

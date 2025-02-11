@@ -8,11 +8,11 @@ class DeepSeekProvider:
         self.api_key = api_key or ""
         self.base_url = base_url or ""
     
-    async def ask_single(self, model, prompt: str):
+    async def ask_single(self, model, prompt: str, format: str = "text"):
         """支持单条 prompt 调用"""
         return await self.ask(model, [{"role": "user", "content": prompt}])
 
-    async def ask(self, model, messages: list[dict]):
+    async def ask(self, model, messages: list[dict], format: str = "text"):
         if model is None:
             model = "deepseek-ai/DeepSeek-R1"
         payload = {

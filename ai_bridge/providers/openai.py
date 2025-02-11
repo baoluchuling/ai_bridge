@@ -10,7 +10,7 @@ class OpenAIProvider:
         """支持单条 prompt 调用"""
         return await self.ask(model, [{"role": "user", "content": prompt}])
     
-    async def ask(self, model, messages: list[dict]):
+    async def ask(self, model, messages: list[dict], format: str = "text"):
         if model is None:
             model = "gpt-4o"
         headers = {

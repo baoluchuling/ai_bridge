@@ -42,14 +42,14 @@ class AIBridge:
         else:
             raise ValueError(f"Unsupported provider: {vendor_name}")
 
-    async def ask_single(self, vendor: str, prompt: str, model = None):
+    async def ask_single(self, vendor: str, prompt: str, model = None, format: str = "text"):
         if vendor not in self.vendorList:
             raise ValueError(f"Provider {vendor} not registered.")
-        response = await self.vendorList[vendor].ask(model, prompt)
+        response = await self.vendorList[vendor].ask(model, prompt, format)
         return AIResponseFormatter.format(vendor, response)
     
-    async def ask(self, vendor: str, messages: list[dict], model = None):
+    async def ask(self, vendor: str, messages: list[dict], model = None, format: str = "text"):
         if vendor not in self.vendorList:
             raise ValueError(f"Provider {vendor} not registered.")
-        response = await self.vendorList[vendor].ask(model, messages)
+        response = await self.vendorList[vendor].ask(model, messages, format)
         return AIResponseFormatter.format(vendor, response)
