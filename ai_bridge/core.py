@@ -52,7 +52,7 @@ class AIBridge:
         if provider not in self.providerList:
             raise ValueError(f"Provider {provider} not registered.")
         provider: ProviderStrategy = self.providerList[provider]
-        response = await provider.ask(model, prompt, format)
+        response = await provider.ask_single(model, prompt, format)
         return AIResponseFormatter.format(provider.deployer, response)
     
     async def ask(self, provider: str, messages: list[dict], model = None, format: str = "text"):
