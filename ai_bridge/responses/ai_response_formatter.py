@@ -56,8 +56,10 @@ class AIResponseFormatter:
 
             if vendor == "openai":
                 return AIResponseFormatter._format_openai(vendor, response)
-            elif vendor == "deepseek":
-                return AIResponseFormatter._format_deepseek(vendor, response)
+            elif vendor == "aliyun":
+                return AIResponseFormatter._format_aliyun(vendor, response)
+            elif vendor == "siliconflow":
+                return AIResponseFormatter._format_siliconflow(vendor, response)
             elif vendor == "google":
                 return AIResponseFormatter._format_google(vendor, response)
             else:
@@ -81,7 +83,7 @@ class AIResponseFormatter:
             model = response.get("modelVersion", "unknown")
             reasoning_content = ""
         except (KeyError, IndexError):
-            raise ValueError(f"Invalid Google response format, {response}")
+            raise ValueError(f"Invalid Google response format. response: {response}")
         
         return ResponseModel(
             status_code=200,
@@ -103,7 +105,29 @@ class AIResponseFormatter:
             model = response.get("model", "unknown")
             reasoning_content = response["choices"][0].get("reasoning_content", "")
         except (KeyError, IndexError):
-            raise ValueError("Invalid OpenAI response format")
+            raise ValueError("Invalid OpenAI response format. response: {response}")
+
+        return ResponseModel(
+            status_code=200,
+            vendor=vendor,
+            response= AIResponse(
+                text.strip(),
+                tokens_used,
+                model,
+                reasoning_content.strip(),
+                response
+            )
+        )
+    
+    @staticmethod
+    def _format_aliyun(vendor, response: dict) -> dict:
+        try:
+            text = response["choices"][0]["message"]["content"]
+            tokens_used = response["usage"]["total_tokens"]
+            model = response.get("model", "unknown")
+            reasoning_content = response["choices"][0].get("reasoning_content", "")
+        except (KeyError, IndexError):
+            raise ValueError("Invalid Aliyun response format. response: {response}")
 
         return ResponseModel(
             status_code=200,
@@ -118,14 +142,14 @@ class AIResponseFormatter:
         )
 
     @staticmethod
-    def _format_deepseek(vendor, response: dict) -> dict:
+    def _format_siliconflow(vendor, response: dict) -> dict:
         try:
             text = response["choices"][0]["message"]["content"]
             tokens_used = response["usage"]["total_tokens"]
             model = response.get("model", "unknown")
             reasoning_content = response["choices"][0].get("reasoning_content", "")
         except (KeyError, IndexError):
-            raise ValueError("Invalid DeepSeek response format")
+            raise ValueError(f"Invalid siliconflow response format. response: {response}")
 
         return ResponseModel(
             status_code=200,

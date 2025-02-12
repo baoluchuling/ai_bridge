@@ -1,33 +1,49 @@
 import requests
 import json
 
-from ai_bridge.responses.ai_response_formatter import AIResponseFormatter
+from ai_bridge.providers.base_provider import ProviderStrategy
 
-class DeepSeekProvider:
-    def __init__(self, api_key=None, base_url=None):
+class AliyunProvider(ProviderStrategy):
+    def __init__(self, provider=None, api_key=None, base_url=None, base_model=None):
+        self.provider = provider or ""
         self.api_key = api_key or ""
         self.base_url = base_url or ""
+        self.base_model = base_model or "qwen-max-latest"
+        self.deployer = "aliyun"
     
     async def ask_single(self, model, prompt: str, format: str = "text"):
         """支持单条 prompt 调用"""
-        return await self.ask(model, [{"role": "user", "content": prompt}])
+        return await self.ask(model, [{"role": "user", "content": prompt}], format)
 
     async def ask(self, model, messages: list[dict], format: str = "text"):
         if model is None:
-            model = "deepseek-ai/DeepSeek-R1"
-        payload = {
-            "model": model,
-            "messages": messages,
-            "stream": False,
-            "max_tokens": 512,
-            "stop": ["null"],
-            "temperature": 0.7,
-            "top_p": 0.7,
-            "top_k": 50,
-            "frequency_penalty": 0.5,
-            "n": 1,
-            "response_format": {"type": "text"},
-        }
+            model = self.base_model
+
+        if format == "json":
+            payload = {
+                "model": model,
+                "messages": messages,
+                "stream": False,
+                "temperature": 0.7,
+                "top_p": 0.7,
+                "top_k": 50,
+                "frequency_penalty": 0.5,
+                "n": 1,
+                "response_format": {"type": "json_object"},
+            }
+        else:
+            payload = {
+                "model": model,
+                "messages": messages,
+                "stream": False,
+                "temperature": 0.7,
+                "top_p": 0.7,
+                "top_k": 50,
+                "frequency_penalty": 0.5,
+                "n": 1,
+                "response_format": {"type": "text"},
+            }
+        
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"

@@ -1,11 +1,13 @@
 import requests
-import json
-import logging
+from ai_bridge.providers.base_provider import ProviderStrategy
 
-class GoogleProvider:
-    def __init__(self, api_key=None, base_url=None):
+class GoogleProvider(ProviderStrategy):
+    def __init__(self, provider=None, api_key=None, base_url=None, base_model=None):
+        self.provider = provider or ""
         self.api_key = api_key or ""
         self.base_url = base_url or ""
+        self.base_model = base_model or "gemini-1.5-flash"
+        self.deployer = "google"
 
     async def ask_single(self, model, prompt: str):
         """支持单条 prompt 调用"""
@@ -14,7 +16,7 @@ class GoogleProvider:
     async def ask(self, model, messages: list[dict], format: str = "text"):
 
         if model is None:
-            model = "gemini-1.5-flash"
+            model = self.base_model
 
         headers = {
             "Content-Type": "application/json"
