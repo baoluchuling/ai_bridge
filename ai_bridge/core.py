@@ -43,7 +43,7 @@ class AIBridge:
             "aliyun": AliyunProvider
         }
 
-        if provider_name in deployer_classes:
+        if deployer in deployer_classes:
             self.providerList[provider_name] = deployer_classes[deployer](provider_name, api_key, base_url, base_model)
         else:
             raise ValueError(f"Unsupported provider: {provider_name}")
